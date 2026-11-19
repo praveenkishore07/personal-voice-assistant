@@ -37,7 +37,7 @@ class AssistantConfig(context: Context) {
         set(value) = prefs.edit().putFloat("lon", value.toFloat()).apply()
 
     fun getTodoList(): MutableList<String> {
-        val raw = prefs.getString("todo_list", "["Review class notes","Drink enough water"]") ?: "[]"
+        val raw = prefs.getString("todo_list", """["Review class notes","Drink enough water"]""") ?: "[]"
         val arr = JSONArray(raw)
         val list = mutableListOf<String>()
         for (i in 0 until arr.length()) {

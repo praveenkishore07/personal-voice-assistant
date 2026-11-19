@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Personal Offline Assistant"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="12dp" />
+
+        <Button
+            android:id="@+id/btnToggleService"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Start Always-On Listener"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Assistant Wake Name (e.g. nova, jarvis, alex):"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/etWakeWord"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="nova"
+            android:inputType="text"
+            android:layout_marginBottom="12dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Favorite Food:"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/etFavFood"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="e.g. Biryani"
+            android:inputType="text"
+            android:layout_marginBottom="12dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Favorite Line / Quote:"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/etFavLine"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="e.g. Keep moving forward."
+            android:inputType="text"
+            android:layout_marginBottom="12dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Today's To-Do List (one per line):"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/etTodoList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minLines="3"
+            android:gravity="top"
+            android:hint="Finish lab record&#10;Revise algorithms"
+            android:inputType="textMultiLine"
+            android:layout_marginBottom="12dp" />
+
+        <Button
+            android:id="@+id/btnSaveSettings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Save Profile &amp; To-Do List"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Test Command (without waiting for mic):"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/etTestCommand"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="what is my next class"
+            android:inputType="text" />
+
+        <Button
+            android:id="@+id/btnRunTest"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Run Command"
+            android:layout_marginBottom="12dp" />
+
+        <TextView
+            android:id="@+id/tvOutput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="12dp"
+            android:background="#EFEFEF"
+            android:text="Assistant output will appear here." />
+
+    </LinearLayout>
+</ScrollView>

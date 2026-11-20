@@ -74,7 +74,7 @@ class VoiceAssistantService : Service(), RecognitionListener, TextToSpeech.OnIni
                 val wake = config.wakeWord
                 updateNotification("Listening for '$wake'")
                 AssistantBus.notifyStatus(true, "LISTENING")
-                AssistantBus.notifyTranscript("Listening for "$wake"...")
+                AssistantBus.notifyTranscript("Listening for '$wake'...")
             } catch (e: Exception) {
                 AssistantBus.notifyStatus(false, "MIC ERROR")
                 AssistantBus.notifyReply("Could not start microphone: ${e.message ?: "unknown error"}")
@@ -126,7 +126,7 @@ class VoiceAssistantService : Service(), RecognitionListener, TextToSpeech.OnIni
     override fun onPartialResult(hypothesis: String?) {
         val partial = extractField(hypothesis, "partial")
         if (partial.isNotEmpty()) {
-            AssistantBus.notifyTranscript("Hearing: "$partial"")
+            AssistantBus.notifyTranscript("Hearing: '$partial'")
         }
     }
 
@@ -134,7 +134,7 @@ class VoiceAssistantService : Service(), RecognitionListener, TextToSpeech.OnIni
         val text = extractField(hypothesis, "text")
         if (text.isEmpty()) return
 
-        AssistantBus.notifyTranscript("Heard: "$text"")
+        AssistantBus.notifyTranscript("Heard: '$text'")
         val wake = config.wakeWord
         if (text.contains(wake)) {
             val afterWake = text.substringAfter(wake).trim()

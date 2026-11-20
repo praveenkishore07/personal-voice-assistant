@@ -77,8 +77,7 @@ class AssistantConfig(context: Context) {
             "THURSDAY | 09:00 | Operating Systems | Room 302",
             "FRIDAY | 10:30 | Database Systems | Room 201",
             "SATURDAY | 09:30 | Project Seminar | Auditorium"
-        ).joinToString("
-")
+        ).joinToString("\n")
         return prefs.getString("weekly_schedule_text", defaultText) ?: defaultText
     }
 

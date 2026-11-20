@@ -84,7 +84,7 @@ class MainActivity : AppCompatActivity(), AssistantUiListener, TextToSpeech.OnIn
             config.saveScheduleText(etSchedule.text.toString())
             tvAssistantTitle.text = "${config.wakeWord.uppercase()} AI"
             refreshNextClassCard()
-            tvOutput.text = "Saved! Say "${config.wakeWord}" followed by any command."
+            tvOutput.text = "Saved! Say '${config.wakeWord}' followed by any command."
         }
 
         btnTest.setOnClickListener {
@@ -121,8 +121,7 @@ class MainActivity : AppCompatActivity(), AssistantUiListener, TextToSpeech.OnIn
         etWakeWord.setText(config.wakeWord)
         etFavFood.setText(config.favFood)
         etFavLine.setText(config.favLine)
-        etTodoList.setText(config.getTodoList().joinToString("
-"))
+        etTodoList.setText(config.getTodoList().joinToString("\n"))
         etSchedule.setText(config.getScheduleText())
     }
 
@@ -135,8 +134,7 @@ class MainActivity : AppCompatActivity(), AssistantUiListener, TextToSpeech.OnIn
             val reply = processor.process(cmd)
             runOnUiThread {
                 tvOutput.text = reply
-                etTodoList.setText(config.getTodoList().joinToString("
-"))
+                etTodoList.setText(config.getTodoList().joinToString("\n"))
                 refreshNextClassCard()
                 if (!AssistantBus.isRunning) {
                     localTts?.speak(reply, TextToSpeech.QUEUE_FLUSH, null, "manual_reply")
@@ -188,7 +186,7 @@ class MainActivity : AppCompatActivity(), AssistantUiListener, TextToSpeech.OnIn
         if (running) {
             btnOrbToggle.setBackgroundResource(R.drawable.bg_orb_active)
             tvStatusBadge.setTextColor(ContextCompat.getColor(this, R.color.accent_emerald))
-            tvOrbHint.text = "Listening for "${config.wakeWord}" (tap to stop)"
+            tvOrbHint.text = "Listening for '${config.wakeWord}' (tap to stop)"
             startPulse()
         } else {
             btnOrbToggle.setBackgroundResource(R.drawable.bg_orb_idle)
@@ -204,8 +202,7 @@ class MainActivity : AppCompatActivity(), AssistantUiListener, TextToSpeech.OnIn
 
     override fun onAssistantReply(reply: String) {
         tvOutput.text = reply
-        etTodoList.setText(config.getTodoList().joinToString("
-"))
+        etTodoList.setText(config.getTodoList().joinToString("\n"))
         refreshNextClassCard()
     }
 

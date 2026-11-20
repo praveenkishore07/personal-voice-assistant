@@ -23,10 +23,12 @@ jobs:
       - name: Download Vosk English model
         run: |
           mkdir -p app/src/main/assets/model-en-us
-          curl -L -o vosk-model.zip https://alphacephei.com/vosk/models/vosk-model-small-en-us-0.15.zip
+          curl -fL -o vosk-model.zip https://alphacephei.com/vosk/models/vosk-model-small-en-us-0.15.zip
           unzip -q vosk-model.zip -d /tmp/vosk
           mv /tmp/vosk/vosk-model-small-en-us-0.15/* app/src/main/assets/model-en-us/
+          uuidgen > app/src/main/assets/model-en-us/uuid
           rm -rf vosk-model.zip /tmp/vosk
+          ls -la app/src/main/assets/model-en-us
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
@@ -36,9 +38,15 @@ jobs:
       - name: Build Debug APK
         run: gradle assembleDebug
 
-      - name: Publish APK to GitHub Releases
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: personal-assistant-apk
+          path: app/build/outputs/apk/debug/app-debug.apk
+
+      - name: Publish Direct Download APK to Releases
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release delete v1.0 --yes || true
-          gh release create v1.0 app/build/outputs/apk/debug/app-debug.apk --target main --title "Personal Assistant v1.0" --notes "Debug APK"
+          gh release delete v2.0 --yes || true
+          gh release create v2.0 app/build/outputs/apk/debug/app-debug.apk --target main --title "Personal Assistant v2.0" --notes "Offline Voice Assistant APK"

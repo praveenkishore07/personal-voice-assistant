@@ -16,7 +16,7 @@ class AssistantConfig(context: Context) {
     private val prefs = context.getSharedPreferences("assistant_prefs", Context.MODE_PRIVATE)
 
     var wakeWord: String
-        get() = prefs.getString("wake_word", "sara")?.lowercase()?.trim().orEmpty().ifEmpty { "sara" }
+        get() = prefs.getString("wake_word", "nova")?.lowercase()?.trim().orEmpty().ifEmpty { "nova" }
         set(value) = prefs.edit().putString("wake_word", value.lowercase().trim()).apply()
 
     var favFood: String
@@ -24,8 +24,8 @@ class AssistantConfig(context: Context) {
         set(value) = prefs.edit().putString("fav_food", value.trim()).apply()
 
     var favLine: String
-        get() = prefs.getString("fav_line", "today is my day.")
-            ?: "today is my day."
+        get() = prefs.getString("fav_line", "Small steps every day lead to big results.")
+            ?: "Small steps every day lead to big results."
         set(value) = prefs.edit().putString("fav_line", value.trim()).apply()
 
     var latitude: Double
@@ -37,12 +37,20 @@ class AssistantConfig(context: Context) {
         set(value) = prefs.edit().putFloat("lon", value.toFloat()).apply()
 
     fun getTodoList(): MutableList<String> {
-        val raw = prefs.getString("todo_list", """["Review class notes","Drink enough water"]""") ?: "[]"
-        val arr = JSONArray(raw)
+        val defaultJson = JSONArray().apply {
+            put("Review class notes")
+            put("Drink enough water")
+        }.toString()
+        val raw = prefs.getString("todo_list", defaultJson) ?: defaultJson
         val list = mutableListOf<String>()
-        for (i in 0 until arr.length()) {
-            val item = arr.optString(i).trim()
-            if (item.isNotEmpty()) list.add(item)
+        try {
+            val arr = JSONArray(raw)
+            for (i in 0 until arr.length()) {
+                val item = arr.optString(i).trim()
+                if (item.isNotEmpty()) list.add(item)
+            }
+        } catch (_: Exception) {
+            list.add("Review class notes")
         }
         return list
     }
@@ -59,17 +67,45 @@ class AssistantConfig(context: Context) {
         saveTodoList(list)
     }
 
-    /**
-     * Edit your pre-given weekly class schedule here.
-     */
-    fun getWeeklySchedule(): List<ClassSlot> = listOf(
-        ClassSlot(DayOfWeek.MONDAY, 9, 0, "Mathematics", "Room 101"),
-        ClassSlot(DayOfWeek.MONDAY, 11, 0, "Computer Science", "Lab 2"),
-        ClassSlot(DayOfWeek.TUESDAY, 9, 30, "Physics", "Room 204"),
-        ClassSlot(DayOfWeek.TUESDAY, 14, 0, "English", "Room 105"),
-        ClassSlot(DayOfWeek.WEDNESDAY, 10, 0, "Data Structures", "Lab 1"),
-        ClassSlot(DayOfWeek.THURSDAY, 9, 0, "Operating Systems", "Room 302"),
-        ClassSlot(DayOfWeek.FRIDAY, 10, 30, "Database Systems", "Room 201"),
-        ClassSlot(DayOfWeek.SATURDAY, 9, 30, "Project Seminar", "Auditorium")
-    )
+    fun getScheduleText(): String {
+        val defaultText = listOf(
+            "MONDAY | 09:00 | Mathematics | Room 101",
+            "MONDAY | 11:00 | Computer Science | Lab 2",
+            "TUESDAY | 09:30 | Physics | Room 204",
+            "TUESDAY | 14:00 | English | Room 105",
+            "WEDNESDAY | 10:00 | Data Structures | Lab 1",
+            "THURSDAY | 09:00 | Operating Systems | Room 302",
+            "FRIDAY | 10:30 | Database Systems | Room 201",
+            "SATURDAY | 09:30 | Project Seminar | Auditorium"
+        ).joinToString("
+")
+        return prefs.getString("weekly_schedule_text", defaultText) ?: defaultText
+    }
+
+    fun saveScheduleText(text: String) {
+        prefs.edit().putString("weekly_schedule_text", text.trim()).apply()
+    }
+
+    fun getWeeklySchedule(): List<ClassSlot> {
+        val slots = mutableListOf<ClassSlot>()
+        for (line in getScheduleText().lines()) {
+            val parts = line.split("|").map { it.trim() }
+            if (parts.size < 3) continue
+            val day = try {
+                DayOfWeek.valueOf(parts[0].uppercase())
+            } catch (_: Exception) {
+                continue
+            }
+            val timeParts = parts[1].split(":")
+            if (timeParts.size != 2) continue
+            val hour = timeParts[0].toIntOrNull() ?: continue
+            val minute = timeParts[1].toIntOrNull() ?: continue
+            val subject = parts[2]
+            val room = if (parts.size >= 4) parts[3] else ""
+            if (hour in 0..23 && minute in 0..59 && subject.isNotEmpty()) {
+                slots.add(ClassSlot(day, hour, minute, subject, room))
+            }
+        }
+        return slots
+    }
 }

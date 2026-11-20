@@ -36,7 +36,7 @@ class CommandProcessor(private val context: Context) {
             query.contains("todo") || query.contains("to-do") || query.contains("to do") || query.contains("tasks") -> {
                 getTodoSummary()
             }
-            query.contains("fav food") || query.contains("favorite food") || query.contains("favourite food") -> {
+            query.contains("fav food") || query.contains("favorite food") || query.contains("favourite food") || query.contains("food") -> {
                 "Your favorite food is ${config.favFood}."
             }
             query.contains("fav line") || query.contains("favorite line") || query.contains("favourite line") || query.contains("quote") -> {
@@ -52,7 +52,7 @@ class CommandProcessor(private val context: Context) {
         }
     }
 
-    private fun getNextClass(): String {
+    fun getNextClass(): String {
         val now = LocalDateTime.now()
         val todaySlots = config.getWeeklySchedule()
             .filter { it.day == now.dayOfWeek }
@@ -88,7 +88,7 @@ class CommandProcessor(private val context: Context) {
             val wind = current.getDouble("windspeed")
             "It is currently $temp degrees Celsius with wind at $wind kilometers per hour."
         } catch (_: Exception) {
-            "Weather requires an internet connection, and you appear to be offline."
+            "Weather needs an internet connection, and you appear to be offline."
         }
     }
 
